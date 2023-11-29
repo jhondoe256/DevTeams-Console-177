@@ -1,0 +1,170 @@
+n-tier arch
+
+2 class lib
+Data - References nothing
+-dotnet new classlib -o "DevTeams.Data"
+
+Repository - References the Data layer
+-dotnet new classlib -o "DevTeams.Repository"
+-dotnet add .\DevTeams.Repository\ reference .\DevTeams.Data\
+
+1 UI layer (Front Facing Application)
+-dotnet new console -o "DevTeams.UI"
+- References the Data/Repository layer(s)
+-dotnet add .\DevTeams.UI\ reference .\DevTeams.Repository\
+-dotnet add .\DevTeams.UI\ reference .\DevTeams.Data\
+-----------------------------------------------------------------------------------------
+   **Domain Class**
+   public DevTeam() { }
+        public DevTeam(string name, List<Developer> developers)
+        {
+            Name = name;
+            Developers = developers;
+        }
+      
+        public int Id { get; set; }
+       
+        public string Name { get; set; } = string.Empty;
+        
+        public List<Developer> Developers { get; set; } = new List<Developer>();
+        
+        public override string ToString()
+        {
+            string str = $"Team Id: {Id}\n" +
+                         $"Team Name: {Name}\n" +
+                         "==============================\n";
+            if (Developers.Count() > 0)
+            {
+                foreach (var developer in Developers)
+                {
+                    System.Console.WriteLine(developer);
+                }
+            }
+            else
+            {
+                System.Console.WriteLine("Sorry, there are no more Developers.");
+            }
+
+            return str;
+        }
+-----------------------------------------------------------------------------------------
+FrontEndDeveloper ->  Developer  :   IFrontEndDeveloper
+BackEndDeveloper ->   Developer  :   IBackEndDeveloper
+FullStackDeveloper -> Developer  :   IFrontEndDeveloper, IBackEndDeveloper
+
+public interface IFrontEndDeveloper
+{
+    public List<FrontEndLanguage>  FrontEndLanguages  {get;set}
+    public List<FrontEndFramework> FrontEndFrameworks {get;set}
+}
+
+public interface IBackEndDeveloper 
+{
+    public List<BackEndLanguage>  BackEndLanguages {get;set;}
+    public List<BackEndFramework> BackEndFrameworks {get;set;}
+}
+
+public enum FrontEndLanguage
+{   
+    HTML = 1,
+    CSS = 2
+    JAVASCRIPT = 3
+}
+
+public enum FrontEndFramework
+{
+    ANGULAR = 1,
+    REACT = 2,
+    VUE = 3,
+    DJANGO = 4,
+    ASP.NET CORE = 5
+}
+
+public enum BackEndLanguage
+{
+    C_SHARP = 1,
+    JAVA,
+    PYTHON,
+    JAVASCRIPT,
+    MYSQL = 1,
+    SQL,
+    MONGODB,
+    POSTGRESQL
+}
+
+public enum BackEndFramework
+{
+   ENTITY_FRAMEWORK_CORE = 1,
+   DAPPER = 2
+}
+
+
+Andrew rotating out?
+
+Dec23- jan first
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------
+    **DevTeamRepository (class)**
+    private readonly List<DevTeam> _devTeamDb = new List<DevTeam>();
+    private readonly DevRepository _devRepo = new DevRepository();
+
+        private int _idCount;
+
+        //C.R.U.D
+        public bool AddDevTeam(DevTeam devTeam)
+        {
+            if (devTeam is null)
+            {
+                return false;
+            }
+            else
+            {
+                _idCount++;
+                devTeam.Id = _idCount;
+                _devTeamDb.Add(devTeam);
+                return true;
+            }
+        }
+
+        //add dev to team
+        //I need to know a DevId
+        //I need to know a TeamId
+        public bool AddDevToTeam(int devId, int teamId)
+        {
+            //defensive coding
+            if (devId > 0)
+            {
+                //we need to access a developer repository.....
+                Developer devInDb = _devRepo.GetDeveloper(devId);
+                if (devInDb is not null && teamId > 0)
+                {
+                    DevTeam teamInDb = GetDevTeam(teamId);
+                    if (teamInDb != null)
+                    {
+                        teamInDb.Developers.Add(devInDb);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private DevTeam GetDevTeam(int teamId)
+        {
+            // foreach(DevTeam team in _devTeamDb)
+            // {
+            //     if(team.Id == teamId)
+            //     {
+            //         return team;
+            //     }
+            // }
+            // return null;
+
+            //L.I.N.Q 
+            return _devTeamDb.FirstOrDefault(devTeam => devTeam.Id == teamId)!;
+        }

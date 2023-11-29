@@ -1,0 +1,4 @@
+c:\ElevenFiftyProjects_177\dotnetProjects\KomodoInsurance\tests\DevTeamTests\obj\Debug\net8.0\DevTeamTests.csproj.AssemblyReference.cache
+c:\ElevenFiftyProjects_177\dotnetProjects\KomodoInsurance\tests\DevTeamTests\obj\Debug\net8.0\DevTeamTests.GeneratedMSBuildEditorConfig.editorconfig
+c:\ElevenFiftyProjects_177\dotnetProjects\KomodoInsurance\tests\DevTeamTests\obj\Debug\net8.0\DevTeamTests.AssemblyInfoInputs.cache
+c:\ElevenFiftyProjects_177\dotnetProjects\KomodoInsurance\tests\DevTeamTests\obj\Debug\net8.0\DevTeamTests.AssemblyInfo.cs
